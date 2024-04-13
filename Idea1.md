@@ -7,15 +7,21 @@ The core gameplay revolves around trying to reach the summoning circle between y
 The summoning circle is able to summon colour back into the world, but because it's on private land, none shall trespass
 
 Asset Plan:
-Character movement
-Shader (black and white, then return to colour by parameter)
-Circle model
-Terrain (does unity have heightmap stuff? I think it does?)
+// Character movement
+// Shaders (black and white, then return to colour by parameter)
+// Terrain (does unity have heightmap stuff? I think it does?)
+
+Models:
+// Circle model
+// Fences
 House model
-Interaction (pick up, combine, put down, use)
-Text system
 Billboard with sniper
 Cameras and trip wires?
+
+Features:
+Interaction (pick up, combine, put down, use)
+Text system
+Game states and progression
 
 Design plan:
 There needn't be a linearity to this nor an obvious sequence of events. Trying to go to the circle by itself makes you die in an unknown way (police siren?). Learning about the sniper makes the billboard with the sniper appear, killing you by sniper if you go to the circle, and crafting a weapon allows you to take him out, which is a solution
