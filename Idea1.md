@@ -19,7 +19,7 @@ Billboard with sniper
 Cameras and trip wires?
 
 Features:
-Interaction (pick up, combine, put down, use)
+Interaction (//pick up, combine, //put down, use)
 Text system
 Game states and progression
 

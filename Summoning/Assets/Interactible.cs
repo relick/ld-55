@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Interactible : MonoBehaviour
@@ -14,5 +15,10 @@ public class Interactible : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void Highlight(bool highlight)
+    {
+
     }
 }
