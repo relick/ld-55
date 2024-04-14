@@ -651,13 +651,13 @@ MonoBehaviour:
 
     An old fable
 
-    
 
-    Once, grew a golden plant
-    at the top of a great mountain. This plant attracted bugs and bees from far away,
-    as the gentle slopes of the mountain spread the sweet smell of the plant wide.
-    But no bee nor bug could make it to the plant, as the mountain was too tall,
-    and insect lives are short.'
+
+    Once, grew a golden plant at the
+    top of a great mountain. This plant attracted bugs and bees from far away, as
+    the gentle slopes of the mountain spread the sweet smell of the plant wide. But
+    no bee nor bug could make it to the plant, as the mountain was too tall, and
+    insect lives are short.'
   - '"I will make it to the Golden Flower" proclaimed a brave rainbow-coloured bug,
     and embarked on her one-way pilgrimage just as many of her relatives had done.
 
@@ -1960,12 +1960,12 @@ MonoBehaviour:
 
     by Philosoworx: "We do the thinking!"
 
-    
 
-    Welcome
-    to the latest edition of "Thinking Metaphorically". Consider an ant on a leaf.
-    For an ant, a leaf is the greatest meal. It provides sustenance for a lifetime.
-    If an ant wanted, it could live by a leaf and enjoy the rest of its days. Instead,
+
+    Welcome to the
+    latest edition of "Thinking Metaphorically". Consider an ant on a leaf. For an
+    ant, a leaf is the greatest meal. It provides sustenance for a lifetime. If an
+    ant wanted, it could live by a leaf and enjoy the rest of its days. Instead,
     it congregates with other ants. Together they cut the leaf from its stem, and
     carry it to a mound where they rip it apart to share amongst themselves.'
   - The reward for the ant making this sacrifice is only more work to do, and a smaller
@@ -2080,8 +2080,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.52, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.52000046, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2144,7 +2144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834d1a4dc66ae6f499c723e5ba3a40f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: 500
+  rotateSpeed: 7
+  yaw: 0
 --- !u!1 &1122566656
 GameObject:
   m_ObjectHideFlags: 0
@@ -2408,10 +2409,10 @@ MonoBehaviour:
   airAcceleration: 5
   maxSpeed: 7.5
   maxRunSpeed: 15
-  rotateSpeed: 500
+  rotateSpeed: 7
   jumpHeight: 2
   gravity: -9.81
-  groundedTimerThreshold: 1
+  groundedTimerThreshold: 0
   myCam: {fileID: 963194230}
   cursor: {fileID: 2100000, guid: aae4b2eea97c6934fa9b56237c4d5b4e, type: 2}
   reach: 2.5
@@ -4301,11 +4302,11 @@ MonoBehaviour:
 
     Corporal E. Sluppet
 
-    
 
-    A little after
-    my return from the Undigo Line, in the midst of the War with the East, we received
-    the broadcast of pictures of the Earth through our television sets.
+
+    A little after my return
+    from the Undigo Line, in the midst of the War with the East, we received the
+    broadcast of pictures of the Earth through our television sets.
 
     I write
     this journal now as a matter of thought-sorting. First my mind was empty, in

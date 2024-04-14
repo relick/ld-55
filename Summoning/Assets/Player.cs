@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
     private float groundedTimer = 0.0f;
     void Movement()
     {
+        Quaternion curRot = transform.rotation;
         if(paused)
         {
             return;
@@ -57,19 +58,19 @@ public class Player : MonoBehaviour
         curAccel = Vector3.zero;
         if (Input.GetKey(KeyCode.W))
         {
-            curAccel += transform.forward;
+            curAccel += myCam.transform.forward;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            curAccel -= transform.forward;
+            curAccel -= myCam.transform.forward;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            curAccel += transform.right;
+            curAccel += myCam.transform.right;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            curAccel -= transform.right;
+            curAccel -= myCam.transform.right;
         }
 
         curAccel.Normalize();
@@ -122,9 +123,16 @@ public class Player : MonoBehaviour
         controller.Move(new Vector3(0, curYVel * Time.deltaTime, 0));
 
         float xRotation = Input.GetAxis("Mouse X");
-        xRotation *= rotateSpeed * Time.deltaTime;
-        transform.Rotate(0, xRotation, 0);
+        if (Mathf.Abs(xRotation) > xLimit)
+        {
+            xRotation *= rotateSpeed;
+            myCam.yaw += xRotation;
+        }
+        //transform.rotation = curRot;
+        //transform.Rotate(0, xRotation, 0);
     }
+
+    public float xLimit = 0.1f;
 
     public CameraY myCam;
     public Material cursor;
@@ -228,7 +236,7 @@ public class Player : MonoBehaviour
 
     public void Pause()
     {
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined;
         cursor.SetFloat(cursorEnabledID, 0);
         paused = true;
         wasPaused = true;
