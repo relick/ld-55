@@ -31,6 +31,7 @@ public class Interactible : MonoBehaviour
 
     }
 
+    [Multiline]
     public string[] pages;
     public string Page(int i)
     {
@@ -43,4 +44,6 @@ public class Interactible : MonoBehaviour
             return pages[i];
         }
     }
+
+    public int PageCount() { return pages.Length; }
 }

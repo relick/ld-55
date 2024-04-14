@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -249,5 +248,14 @@ public class Player : MonoBehaviour
     {
         Movement();
         Interaction();
+    }
+
+    public GameObject summonCircle;
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject == summonCircle)
+        {
+            gameSystem.RestoreColour();
+        }
     }
 }
