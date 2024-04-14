@@ -107,7 +107,7 @@ Material:
     - _Cutoff: 0.5
     - _DepthStrength: 50
     - _DepthThickness: 0.35
-    - _DepthThreshold: 3.3
+    - _DepthThreshold: 12
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0

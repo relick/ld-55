@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class Interactible : MonoBehaviour
 {
+    public enum Type
+    {
+        Pickup,
+        Book,
+        Note,
+    };
+
+    public Type type;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,5 +29,18 @@ public class Interactible : MonoBehaviour
     public void Highlight(bool highlight)
     {
 
+    }
+
+    public string[] pages;
+    public string Page(int i)
+    {
+        if(i >= pages.Length)
+        {
+            return "";
+        }
+        else
+        {
+            return pages[i];
+        }
     }
 }

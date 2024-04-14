@@ -29,3 +29,14 @@ Reading the books allows you to understand that the barriers we put up are not r
 Or the practical answer, you can discover the cameras and the trip wires, and either avoid them, or craft a device to disarm them
 
 While I get started with the assets and the coding, I can have a think about any puzzles, maybe just doing above is still a shit ton to aim for in just 2 days, I've not even mentioned music too, so adding more puzzles might be the worst idea
+
+Steps for today:
+Write 3 'books':
+1) Earth as seen from space
+2) The landlord as an ant on a leaf
+3) Colour isn't real
+
+Book reading system
+//Book model
+
+Gameover outside fence, until state changes, colour fade win on portal entry

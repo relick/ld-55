@@ -8,13 +8,19 @@ using UnityEngine.Rendering.Universal;
 
 public class Player : MonoBehaviour
 {
+    public GameSystem gameSystem;
+    private bool paused = false;
+    private bool wasPaused = false;
+
     // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         controller = GetComponent<CharacterController>();
-        defaultSizeID = Shader.PropertyToID("_DefaultSize");
-        cursor.SetFloat(defaultSizeID, 0.02f);
+        cursorEnabledID = Shader.PropertyToID("_CursorEnabled");
+        cursor.SetFloat(cursorEnabledID, 1);
+        highlightPropID = Shader.PropertyToID("_CursorHighlight");
+        cursor.SetFloat(highlightPropID, 0);
     }
 
     public float acceleration = 5.0f;
@@ -33,6 +39,11 @@ public class Player : MonoBehaviour
     private float groundedTimer = 0.0f;
     void Movement()
     {
+        if(paused)
+        {
+            return;
+        }
+
         bool isGrounded = controller.isGrounded;
         if(isGrounded)
         {
@@ -116,12 +127,13 @@ public class Player : MonoBehaviour
         transform.Rotate(0, xRotation, 0);
     }
 
-    public GameObject myCam;
+    public CameraY myCam;
     public Material cursor;
     public float reach = 1.0f;
     public GameObject holdParent;
     private Interactible currentHighlight;
-    private int defaultSizeID = -1;
+    private int highlightPropID = -1;
+    private int cursorEnabledID = -1;
     private GameObject holdingObject;
     private Transform holdingPrevParent;
     private Vector3 holdingPrevPos;
@@ -129,6 +141,16 @@ public class Player : MonoBehaviour
 
     void Interaction()
     {
+        if(paused)
+        {
+            return;
+        }
+        if (wasPaused)
+        {
+            wasPaused = false;
+            return;
+        }
+
         if (holdingObject == null)
         {
             Ray selectionRay = new Ray(myCam.transform.position, myCam.transform.forward);
@@ -145,19 +167,25 @@ public class Player : MonoBehaviour
                     }
                     currentHighlight = other;
                     currentHighlight.Highlight(true);
-                    cursor.SetFloat(defaultSizeID, 0.05f);
+                    cursor.SetFloat(highlightPropID, 1);
 
                     if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
-                        Pickup(info.collider.gameObject);
+                        Pickup(info.collider.gameObject, other);
                     }
+                }
+                else if (currentHighlight != null)
+                {
+                    currentHighlight.Highlight(false);
+                    currentHighlight = null;
+                    cursor.SetFloat(highlightPropID, 0);
                 }
             }
             else if (currentHighlight != null)
             {
                 currentHighlight.Highlight(false);
                 currentHighlight = null;
-                cursor.SetFloat(defaultSizeID, 0.02f);
+                cursor.SetFloat(highlightPropID, 0);
             }
         }
         else
@@ -169,14 +197,24 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Pickup(GameObject obj)
+    void Pickup(GameObject obj, Interactible i)
     {
-        holdingObject = obj;
-        holdingPrevParent = holdingObject.transform.parent;
-        holdingPrevPos = holdingObject.transform.localPosition;
-        holdingPrevRot = holdingObject.transform.localRotation;
-        holdingObject.transform.parent = holdParent.transform;
-        holdingObject.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        cursor.SetFloat(highlightPropID, 0);
+
+        if (i.type == Interactible.Type.Book)
+        {
+            gameSystem.OpenBook(i);
+        }
+        else
+        {
+
+            holdingObject = obj;
+            holdingPrevParent = holdingObject.transform.parent;
+            holdingPrevPos = holdingObject.transform.localPosition;
+            holdingPrevRot = holdingObject.transform.localRotation;
+            holdingObject.transform.parent = holdParent.transform;
+            holdingObject.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        }
     }
     
     void Drop()
@@ -187,6 +225,23 @@ public class Player : MonoBehaviour
             holdingObject.transform.SetLocalPositionAndRotation(holdingPrevPos, holdingPrevRot);
             holdingObject = null;
         }
+    }
+
+    public void Pause()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        cursor.SetFloat(cursorEnabledID, 0);
+        paused = true;
+        wasPaused = true;
+        myCam.Pause();
+    }
+
+    public void Unpause()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        cursor.SetFloat(cursorEnabledID, 1);
+        paused = false;
+        myCam.Unpause();
     }
 
     // Update is called once per frame
