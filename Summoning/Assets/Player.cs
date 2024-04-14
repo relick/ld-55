@@ -38,7 +38,6 @@ public class Player : MonoBehaviour
     private float groundedTimer = 0.0f;
     void Movement()
     {
-        Quaternion curRot = transform.rotation;
         if(paused)
         {
             return;
@@ -58,19 +57,19 @@ public class Player : MonoBehaviour
         curAccel = Vector3.zero;
         if (Input.GetKey(KeyCode.W))
         {
-            curAccel += myCam.transform.forward;
+            curAccel += transform.forward;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            curAccel -= myCam.transform.forward;
+            curAccel -= transform.forward;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            curAccel += myCam.transform.right;
+            curAccel += transform.right;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            curAccel -= myCam.transform.right;
+            curAccel -= transform.right;
         }
 
         curAccel.Normalize();
@@ -123,16 +122,9 @@ public class Player : MonoBehaviour
         controller.Move(new Vector3(0, curYVel * Time.deltaTime, 0));
 
         float xRotation = Input.GetAxis("Mouse X");
-        if (Mathf.Abs(xRotation) > xLimit)
-        {
-            xRotation *= rotateSpeed;
-            myCam.yaw += xRotation;
-        }
-        //transform.rotation = curRot;
-        //transform.Rotate(0, xRotation, 0);
+        xRotation *= rotateSpeed * Time.deltaTime;
+        transform.Rotate(0, xRotation, 0);
     }
-
-    public float xLimit = 0.1f;
 
     public CameraY myCam;
     public Material cursor;

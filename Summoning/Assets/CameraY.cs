@@ -15,10 +15,6 @@ public class CameraY : MonoBehaviour
         
     }
 
-    public float yaw = 0.0f;
-    private float curAngle = 0.0f;
-    public float yLimit = 0.1f;
-
     // Update is called once per frame
     void Update()
     {
@@ -28,18 +24,14 @@ public class CameraY : MonoBehaviour
         }
 
         float yRotation = -Input.GetAxis("Mouse Y");
-        float newAngle = curAngle;
-        if (Mathf.Abs(yRotation) > yLimit)
-        {
-            yRotation *= rotateSpeed;
-            newAngle += yRotation;
-        }
+        yRotation *= rotateSpeed * Time.deltaTime;
+        float curAngle = transform.localRotation.eulerAngles.x;
+        float newAngle = curAngle + yRotation;
         if (newAngle > 180)
         {
             newAngle -= 360;
         }
-        transform.rotation = Quaternion.Euler(Mathf.Clamp(newAngle, -85, 85), yaw, 0);
-        curAngle = newAngle;
+        transform.localRotation = Quaternion.Euler(Mathf.Clamp(newAngle, -85, 85), 0, 0);
     }
     public void Pause()
     {

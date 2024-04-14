@@ -2144,8 +2144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834d1a4dc66ae6f499c723e5ba3a40f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotateSpeed: 7
-  yaw: 0
+  rotateSpeed: 500
 --- !u!1 &1122566656
 GameObject:
   m_ObjectHideFlags: 0
@@ -2409,7 +2408,7 @@ MonoBehaviour:
   airAcceleration: 5
   maxSpeed: 7.5
   maxRunSpeed: 15
-  rotateSpeed: 7
+  rotateSpeed: 500
   jumpHeight: 2
   gravity: -9.81
   groundedTimerThreshold: 0
