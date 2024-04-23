@@ -3,15 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
+using static System.Collections.Specialized.BitVector32;
 
 public class Player : MonoBehaviour
 {
     public GameSystem gameSystem;
     private bool paused = false;
     private bool wasPaused = false;
+    public InputActionAsset actions;
 
-    // Start is called before the first frame update
+    private InputAction cameraXAction;
+    private InputAction moveAction;
+    private InputAction runAction;
+    private InputAction jumpAction;
+    private InputAction interactAction;
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -20,6 +27,12 @@ public class Player : MonoBehaviour
         cursor.SetFloat(cursorEnabledID, 1);
         highlightPropID = Shader.PropertyToID("_CursorHighlight");
         cursor.SetFloat(highlightPropID, 0);
+
+        cameraXAction = actions.FindActionMap("gameplay").FindAction("CameraX");
+        moveAction = actions.FindActionMap("gameplay").FindAction("Move");
+        runAction = actions.FindActionMap("gameplay").FindAction("Run");
+        jumpAction = actions.FindActionMap("gameplay").FindAction("Jump");
+        interactAction = actions.FindActionMap("gameplay").FindAction("Interact");
     }
 
     public float acceleration = 5.0f;
@@ -55,23 +68,9 @@ public class Player : MonoBehaviour
         }
 
         curAccel = Vector3.zero;
-        if (Input.GetKey(KeyCode.W))
-        {
-            curAccel += transform.forward;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            curAccel -= transform.forward;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            curAccel += transform.right;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            curAccel -= transform.right;
-        }
-
+        Vector2 movement = moveAction.ReadValue<Vector2>();
+        curAccel += movement.y * transform.forward;
+        curAccel += movement.x * transform.right;
         curAccel.Normalize();
 
         if (isGrounded)
@@ -97,7 +96,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        bool running = Input.GetKey(KeyCode.LeftShift);
+        bool running = runAction.IsPressed();
 
         curVel += curAccel * Time.deltaTime;
         curVel = Vector3.ClampMagnitude(curVel, running ? maxRunSpeed : maxSpeed);
@@ -111,7 +110,7 @@ public class Player : MonoBehaviour
                 curYVel = 0.0f;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (jumpAction.triggered)
             {
                 curYVel += Mathf.Sqrt(-2 * gravity * jumpHeight);
             }
@@ -121,9 +120,12 @@ public class Player : MonoBehaviour
 
         controller.Move(new Vector3(0, curYVel * Time.deltaTime, 0));
 
-        float xRotation = Input.GetAxis("Mouse X");
-        xRotation *= rotateSpeed * Time.deltaTime;
-        transform.Rotate(0, xRotation, 0);
+        float xRotation = cameraXAction.ReadValue<float>();
+        if (xRotation != 0.075f)
+        {
+            xRotation *= rotateSpeed * Time.deltaTime;
+            transform.Rotate(0, xRotation, 0);
+        }
     }
 
     public CameraY myCam;
@@ -168,7 +170,7 @@ public class Player : MonoBehaviour
                     currentHighlight.Highlight(true);
                     cursor.SetFloat(highlightPropID, 1);
 
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    if (interactAction.triggered)
                     {
                         Pickup(info.collider.gameObject, other);
                     }
@@ -189,7 +191,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (interactAction.triggered)
             {
                 Drop();
             }
@@ -228,7 +230,7 @@ public class Player : MonoBehaviour
 
     public void Pause()
     {
-        Cursor.lockState = CursorLockMode.Confined;
+        //Cursor.lockState = CursorLockMode.Confined;
         cursor.SetFloat(cursorEnabledID, 0);
         paused = true;
         wasPaused = true;
@@ -237,7 +239,7 @@ public class Player : MonoBehaviour
 
     public void Unpause()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         cursor.SetFloat(cursorEnabledID, 1);
         paused = false;
         myCam.Unpause();

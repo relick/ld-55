@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -17,13 +18,25 @@ public class GameSystem : MonoBehaviour
 
     public Image lightness;
     public float fadingIn = 1.0f;
-    // Start is called before the first frame update
+
+    public InputActionAsset actions;
+
+    private InputAction nextPageAction;
+    private InputAction prevPageAction;
+    private InputAction exitAction;
     void Start()
     {
         canvas.SetActive(false);
         lightness.CrossFadeAlpha(0.0f, fadingIn, false);
         darkness.CrossFadeAlpha(0.0f, 0.0f, false);
         colourPropID = Shader.PropertyToID("_Level");
+
+        nextPageAction = actions.FindActionMap("reading").FindAction("NextPage");
+        nextPageAction.performed += TurnRight;
+        prevPageAction = actions.FindActionMap("reading").FindAction("PrevPage");
+        prevPageAction.performed += TurnLeft;
+        exitAction = actions.FindActionMap("reading").FindAction("Exit");
+        exitAction.performed += CloseBook;
     }
 
     private int colourPropID = -1;
@@ -78,45 +91,60 @@ public class GameSystem : MonoBehaviour
     private int curPage = 0;
     public void OpenBook(Interactible i)
     {
-        openBook = i;
-        player.Pause();
-        leftPage.text = i.Page(0);
-        rightPage.text = i.Page(1);
-        curPage = 0;
-        canvas.SetActive(true);
-        right.SetActive(curPage + 2 < i.PageCount());
-        left.SetActive(false);
+        if (openBook == null)
+        {
+            openBook = i;
+            player.Pause();
+            leftPage.text = i.Page(0);
+            rightPage.text = i.Page(1);
+            curPage = 0;
+            canvas.SetActive(true);
+            right.SetActive(curPage + 2 < i.PageCount());
+            left.SetActive(false);
+
+            actions.FindActionMap("reading").Enable();
+            actions.FindActionMap("gameplay").Disable();
+        }
     }
-    public void CloseBook()
+    public void CloseBook(InputAction.CallbackContext context)
     {
         if (openBook != null)
         {
             openBook = null;
             player.Unpause();
             canvas.SetActive(false);
+
+            actions.FindActionMap("reading").Disable();
+            actions.FindActionMap("gameplay").Enable();
         }
     }
 
-    public void TurnRight()
+    public void TurnRight(InputAction.CallbackContext context)
     {
-        curPage += 2;
-        leftPage.text = openBook.Page(curPage);
-        rightPage.text = openBook.Page(curPage + 1);
-        right.SetActive(curPage + 2 < openBook.PageCount());
-        left.SetActive(true);
-
-        if (!right.activeSelf && !booksRead.Contains(openBook))
+        if (openBook != null && curPage + 2 < openBook.PageCount())
         {
-            booksRead.Add(openBook);
+            curPage += 2;
+            leftPage.text = openBook.Page(curPage);
+            rightPage.text = openBook.Page(curPage + 1);
+            right.SetActive(curPage + 2 < openBook.PageCount());
+            left.SetActive(true);
+
+            if (!right.activeSelf && !booksRead.Contains(openBook))
+            {
+                booksRead.Add(openBook);
+            }
         }
     }
-    public void TurnLeft()
+    public void TurnLeft(InputAction.CallbackContext context)
     {
-        curPage -= 2;
-        leftPage.text = openBook.Page(curPage);
-        rightPage.text = openBook.Page(curPage + 1);
-        right.SetActive(true);
-        left.SetActive(curPage != 0);
+        if (openBook != null && curPage > 0)
+        {
+            curPage -= 2;
+            leftPage.text = openBook.Page(curPage);
+            rightPage.text = openBook.Page(curPage + 1);
+            right.SetActive(true);
+            left.SetActive(curPage > 0);
+        }
     }
 
     private bool restoringColour = false;
@@ -135,5 +163,14 @@ public class GameSystem : MonoBehaviour
             bookBG.sprite = colourBG;
             restored = true;
         }
+    }
+
+    void OnEnable()
+    {
+        actions.FindActionMap("gameplay").Enable();
+    }
+    void OnDisable()
+    {
+        actions.FindActionMap("gameplay").Disable();
     }
 }

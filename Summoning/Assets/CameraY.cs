@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraY : MonoBehaviour
 {
+    public InputActionAsset actions;
+
     public float rotateSpeed = 500.0f;
 
     private bool paused = false;
 
-    // Start is called before the first frame update
+    private InputAction yAction;
     void Start()
     {
-        
+        yAction = actions.FindActionMap("gameplay").FindAction("CameraY");
     }
 
     // Update is called once per frame
@@ -23,7 +26,7 @@ public class CameraY : MonoBehaviour
             return;
         }
 
-        float yRotation = -Input.GetAxis("Mouse Y");
+        float yRotation = -yAction.ReadValue<float>();
         yRotation *= rotateSpeed * Time.deltaTime;
         float curAngle = transform.localRotation.eulerAngles.x;
         float newAngle = curAngle + yRotation;
